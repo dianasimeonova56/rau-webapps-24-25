@@ -103,6 +103,7 @@ select:focus {
 .primary-button {
     background-color: #ff7e5f;
     font-size: 16px;
+    margin-bottom: 5px;
 }
 
 #progress-bar{

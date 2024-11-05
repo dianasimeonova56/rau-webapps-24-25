@@ -1,11 +1,17 @@
 from datetime import datetime
 import json
+import os
 from flask import Flask, request, Response
 from flask_cors import CORS
 
 from entities import User 
 from storage import connect 
 
+
+FILE_STORAGE_PATH = "files"
+if not os.path.exists(FILE_STORAGE_PATH):
+    os.makedirs(FILE_STORAGE_PATH)
+    
 app = Flask("app")
 CORS(app, 
      resources={
@@ -106,6 +112,29 @@ def signup():
                             headers={"Content-Type": "application/json"})
     return response
 
+
+@app.route("/upload", methods=["POST"])
+def upload():
+    print(request.files)
+    print(request.form)#extra info
+    if 'selfieFile' not in request.files:
+        return Response(json.dumps({"error": "No file part"}),
+                                status=400,
+                                headers={"Content-Type": "application/json"})
+    
+    file = request.files['selfieFile']
+    if file.filename == "":
+        return Response(json.dumps({"error": "No selected file"}),
+                                status=400,
+                                headers={"Content-Type": "application/json"})
+    
+    file_path = os.path.join(FILE_STORAGE_PATH, file.filename)
+    file.save(file_path)
+        
+    response = Response(json.dumps({"message": f"File {file.filename} successfully uploaded"}),
+                                status=200,
+                                headers={"Content-Type": "application/json"})
+    return response
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

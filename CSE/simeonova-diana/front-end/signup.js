@@ -64,7 +64,6 @@ function signupStep1() {
     .catch(errorHappened);
 
     window.localStorage.setItem('user', JSON.stringify(user));
-//     window.location.replace("signup-2.html");
 }
 
 function signupStep2() {
@@ -99,20 +98,17 @@ function getData() {
 }
 
 function responseBodyRecieved(response) {
-    console.log(response);
-    
+    window.localStorage.setItem('user-id', response.data.id);
+    window.localStorage.setItem('user-first_name', response.data.first_name);
+    window.location.replace("signup-2.html");
 }
 
 function responseArrived(response) {
-    console.log("Success!!!");
-    console.log(response);
     if (!response.ok) {
         throw new Error("failed to get data");
     }
     return response.json();
 }
 
-function errorHappened(response) {
-    console.log("Error!!!");
-    console.log(response);
+function errorHappened() {
 }
